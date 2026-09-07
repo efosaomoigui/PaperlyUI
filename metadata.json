@@ -1,0 +1,6 @@
+{
+  "name": "Paperly — Editorial Intelligence & Synthesis",
+  "description": "Computational news synthesis broadsheet providing verifiable intelligence, macro impact tracking, and real-time telemetry for institutional leaders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
