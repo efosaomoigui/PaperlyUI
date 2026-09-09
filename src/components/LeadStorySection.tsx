@@ -1,5 +1,5 @@
 import { useState, useEffect, type TouchEvent } from 'react';
-import { Camera, FileText, ArrowRight, Sparkles, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { Camera, FileText, ArrowRight, Sparkles, ChevronLeft, ChevronRight, ShieldCheck, ChevronDown } from 'lucide-react';
 import { BRIEFING_CAROUSEL_DOSSIERS } from '../data/mockData';
 import { IntelligenceDossier } from '../types';
 
@@ -7,16 +7,19 @@ interface LeadStorySectionProps {
   onOpenDossier: (dossier: IntelligenceDossier) => void;
   onSelectSector: (sectorId: string) => void;
   onOpenTimelineEvent: (eventId: string) => void;
+  onOpenMethodology?: () => void;
 }
 
 export function LeadStorySection({
   onOpenDossier,
   onSelectSector,
   onOpenTimelineEvent,
+  onOpenMethodology,
 }: LeadStorySectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isFading, setIsFading] = useState(false);
+  const [isProgressiveOpen, setIsProgressiveOpen] = useState(false);
 
   const dossiers = BRIEFING_CAROUSEL_DOSSIERS;
   const currentDossier = dossiers[currentIndex];
@@ -74,7 +77,7 @@ export function LeadStorySection({
   return (
     <div
       id="hero-paperly-briefing"
-      className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 touch-pan-y"
+      className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-6 touch-pan-y"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
@@ -84,6 +87,126 @@ export function LeadStorySection({
       role="region"
       aria-label="The Paperly Briefing Lead Carousel"
     >
+      {/* ----------------- Clean Briefing Introduction Section ----------------- */}
+      <div className="pt-2 pb-4">
+        {/* Eyebrow */}
+        <div className="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-[#94a3b8] mb-2.5">
+          <span className="font-semibold text-[#64748b]">PAPERLY BRIEFING · MIDDAY EDITION</span>
+          <span className="hidden sm:inline text-[9.5px] text-[#cbd5e1]">
+            VOL. 04 · ED. 182 // LAGOS · LONDON · WASHINGTON DC
+          </span>
+        </div>
+
+        {/* Main Title Row with Quiet Carousel Controls: 01 / 03 ‹ › */}
+        <div className="flex items-baseline justify-between gap-4 pb-2">
+          <h1 className="font-newsreader text-[36px] sm:text-[46px] lg:text-[52px] font-normal tracking-tight text-[#0F172A] leading-none">
+            The Paperly Briefing
+          </h1>
+
+          {/* Quiet & Elegant Carousel Controls: 01 / 03 ‹ › */}
+          <div className="flex items-center space-x-2.5 font-mono text-[11px] text-[#45464d] select-none shrink-0 pl-2">
+            <span className="font-semibold text-[#0F172A] tracking-wider text-[11px]">
+              0{currentIndex + 1} <span className="text-[#94a3b8] font-normal">/ 0{dossiers.length}</span>
+            </span>
+            <div className="flex items-center border border-[#cbd5e1] bg-white">
+              <button
+                id="btn-lead-carousel-prev"
+                onClick={handlePrev}
+                aria-label="Previous development"
+                className="p-1 text-[#45464d] hover:bg-[#0F172A] hover:text-white transition-colors border-r border-[#cbd5e1] cursor-pointer"
+                title="Previous development"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                id="btn-lead-carousel-next"
+                onClick={handleNext}
+                aria-label="Next development"
+                className="p-1 text-[#45464d] hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer"
+                title="Next development"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Single Clean Metadata Row with Progressive Disclosure Trigger */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 pt-1.5 pb-3 border-b border-[#e2e8f0] text-[11px] font-inter text-[#64748b]">
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5">
+            <span className="font-bold text-[#DC2626] uppercase text-[10px] tracking-wider">
+              {currentDossier.status}
+            </span>
+            <span className="text-[#cbd5e1]">·</span>
+            <span>Updated {currentDossier.updatedTime}</span>
+            <span className="text-[#cbd5e1]">·</span>
+            <span className="text-[#0F172A] font-medium">{currentDossier.sourcesTriangulated} sources</span>
+            <span className="text-[#cbd5e1]">·</span>
+            <span className="text-[#15803d] font-semibold flex items-center space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#15803d] inline-block" />
+              <span>High confidence</span>
+            </span>
+          </div>
+
+          {/* Progressive Disclosure Button */}
+          <button
+            id="btn-toggle-verified-intelligence"
+            onClick={() => setIsProgressiveOpen((prev) => !prev)}
+            className="inline-flex items-center space-x-1 text-[10.5px] font-mono font-bold tracking-wider text-[#1E3A8A] hover:text-[#0F172A] transition-colors cursor-pointer"
+            title="Toggle full triangulation verification protocol and source telemetry"
+          >
+            <ShieldCheck className="w-3 h-3 text-[#1E3A8A]" />
+            <span>VERIFIED INTELLIGENCE</span>
+            <ChevronDown className={`w-3 h-3 text-[#64748b] transition-transform duration-200 ${isProgressiveOpen ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+
+        {/* Progressive Disclosure Expandable Intelligence Drawer */}
+        {isProgressiveOpen && (
+          <div className="bg-[#f8fafc] border-x border-b border-[#cbd5e1] p-4 mb-4 text-xs font-inter transition-all">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-3 border-b border-[#e2e8f0]">
+              <div className="space-y-1">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-[#64748b]">
+                  SYSTEM PROVENANCE &amp; VERIFICATION TELEMETRY
+                </div>
+                <div className="font-newsreader text-base font-bold text-[#0F172A]">
+                  6-Node Asymmetric Corroboration Architecture (Protocol v4.12-PROV)
+                </div>
+                <p className="text-[#45464d] text-xs max-w-2xl">
+                  Synthesized across independent institutional ledgers, direct API telemetry, and corroborated regulatory registers. No anonymous or uncorroborated sourcing permitted.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap md:flex-col gap-2 shrink-0 text-[11px] font-mono">
+                <div>
+                  <span className="text-[#64748b]">CONFIDENCE:</span> <strong className="text-[#15803d]">94.8%</strong>
+                </div>
+                <div>
+                  <span className="text-[#64748b]">CYCLE:</span> <strong className="text-[#0F172A]">15:00 UTC (HOURLY)</strong>
+                </div>
+                <div>
+                  <span className="text-[#64748b]">RECORD:</span> <span className="text-[#45464d]">VOL. 04 · ED. 182</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="text-[11px] text-[#45464d]">
+                <strong className="text-[#0F172A]">6 Primary Data Feeds:</strong> NELFUND Biometric Telemetry, JAMB CAPS, NIBSS Mandate Clearing, ASUU Policy Registry, MoE Budgetary Ledger, NBS Deflator.
+              </div>
+              {onOpenMethodology && (
+                <button
+                  onClick={onOpenMethodology}
+                  className="text-[10.5px] font-mono font-bold text-[#1E3A8A] hover:underline uppercase tracking-wider shrink-0 cursor-pointer"
+                >
+                  INSPECT METHODOLOGY &rarr;
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-[#e2e8f0]">
         
         {/* Left 8 Columns: Main Dossier Analysis */}
@@ -92,101 +215,6 @@ export function LeadStorySection({
             isFading ? 'opacity-30' : 'opacity-100'
           }`}
         >
-          
-          {/* Metadata Badges & Understated Editorial Carousel Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-y-2 mb-3 pb-2 border-b border-[#f1f5f9]">
-            {/* Intelligence metadata */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] font-inter">
-              <span
-                className={`text-white text-[10px] font-bold tracking-widest px-2 py-0.5 uppercase ${
-                  currentDossier.status === 'DEVELOPING'
-                    ? 'bg-[#DC2626]'
-                    : currentDossier.status === 'UPDATED'
-                    ? 'bg-[#1E3A8A]'
-                    : 'bg-[#15803d]'
-                }`}
-              >
-                {currentDossier.status}
-              </span>
-              <span className="text-[#64748b] font-mono text-[10px] tracking-wider uppercase">
-                UPDATED {currentDossier.updatedTime}
-              </span>
-              <span className="text-[#cbd5e1]">•</span>
-              <span className="text-[#45464d] text-[11px]">
-                <strong className="font-semibold text-[#0F172A]">{currentDossier.sourcesTriangulated} SOURCES</strong> TRIANGULATED
-              </span>
-              <span className="text-[#cbd5e1]">•</span>
-              <span className="flex items-center space-x-1.5 text-[#15803d]">
-                <span className="w-2 h-2 rounded-full bg-[#15803d]" />
-                <span className="font-mono text-[10px] font-semibold tracking-wide text-[#0F172A]">
-                  CONFIDENCE: HIGH ({currentDossier.confidenceScore}%)
-                </span>
-              </span>
-            </div>
-
-            {/* Understated Editorial Carousel Controls */}
-            <div className="flex items-center space-x-2.5 font-mono text-[11px] text-[#45464d] select-none">
-              {isPaused ? (
-                <span className="text-[10px] text-[#76777d] uppercase tracking-widest hidden sm:flex items-center space-x-1">
-                  <Pause className="w-2.5 h-2.5" />
-                  <span>PAUSED ON HOVER</span>
-                </span>
-              ) : (
-                <span className="text-[10px] text-[#94a3b8] uppercase tracking-widest hidden sm:flex items-center space-x-1">
-                  <Play className="w-2.5 h-2.5" />
-                  <span>AUTO-ROTATING</span>
-                </span>
-              )}
-
-              {/* Progress indicator */}
-              <div className="flex items-center space-x-1 bg-[#f4f4f2] px-2 py-0.5 border border-[#e2e8f0]">
-                <span className="font-bold text-[#0F172A]">0{currentIndex + 1}</span>
-                <span className="text-[#94a3b8]">/</span>
-                <span className="text-[#64748b]">0{dossiers.length}</span>
-              </div>
-
-              {/* Subtle navigation chevrons */}
-              <div className="flex items-center border border-[#cbd5e1] bg-white">
-                <button
-                  id="btn-lead-carousel-prev"
-                  onClick={handlePrev}
-                  aria-label="Previous development"
-                  className="p-1 text-[#45464d] hover:bg-[#f4f4f2] hover:text-[#0F172A] transition-colors border-r border-[#cbd5e1] cursor-pointer"
-                  title="Previous intelligence development"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  id="btn-lead-carousel-next"
-                  onClick={handleNext}
-                  aria-label="Next development"
-                  className="p-1 text-[#45464d] hover:bg-[#f4f4f2] hover:text-[#0F172A] transition-colors cursor-pointer"
-                  title="Next intelligence development"
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              {/* Subtle progress ticks */}
-              <div className="hidden sm:flex items-center space-x-1">
-                {dossiers.map((_, idx) => (
-                  <button
-                    key={idx}
-                    id={`btn-carousel-slide-indicator-${idx + 1}`}
-                    onClick={() => switchSlide(idx)}
-                    aria-label={`Jump to development ${idx + 1}`}
-                    className={`h-1 transition-all cursor-pointer ${
-                      currentIndex === idx
-                        ? 'w-5 bg-[#0F172A]'
-                        : 'w-1.5 bg-[#cbd5e1] hover:bg-[#94a3b8]'
-                    }`}
-                    title={`Jump to Development 0${idx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
           {/* Lead Headline */}
           <h2 className="font-newsreader text-[30px] sm:text-[36px] lg:text-[40px] font-medium leading-[1.12] text-[#0F172A] tracking-tight mb-3">
             {currentDossier.headline}

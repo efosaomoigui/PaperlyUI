@@ -1,4 +1,4 @@
-import { X, Search, ChevronRight, Shield, Layers, Radio, Sparkles, BookOpen, Video, Clock, Bookmark, SlidersHorizontal, ArrowUpRight, Cpu } from 'lucide-react';
+import { X, Search, ChevronRight, Shield, Layers, Radio, Sparkles, BookOpen, Video, Clock, Bookmark, SlidersHorizontal, ArrowUpRight, Cpu, MessageSquare } from 'lucide-react';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -44,6 +44,7 @@ export function MobileNavDrawer({
   ];
 
   const intelligenceViews = [
+    { id: 'community', label: 'Community Deliberation', icon: MessageSquare, badge: 'CIVIC' },
     { id: 'impact-watch', label: 'Impact Watch', icon: Radio, badge: 'CONSEQUENCES' },
     { id: 'perspectives', label: 'Perspectives', icon: Layers, badge: 'DIALECTIC' },
     { id: 'developing', label: 'Developing Situations', icon: Sparkles, badge: 'LIVE' },

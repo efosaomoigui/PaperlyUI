@@ -10,6 +10,8 @@ import {
   Users,
   Compass,
   ArrowRight,
+  MessageSquare,
+  Vote,
 } from 'lucide-react';
 import { BRIEFING_CAROUSEL_DOSSIERS, DOSSIER_METHODOLOGY } from '../data/mockData';
 import { IntelligenceDossier } from '../types';
@@ -19,11 +21,17 @@ interface DossierDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   dossier?: IntelligenceDossier | null;
+  onOpenCommunityTopic?: (topicId: string) => void;
 }
 
-export function DossierDetailModal({ isOpen, onClose, dossier: propDossier }: DossierDetailModalProps) {
+export function DossierDetailModal({
+  isOpen,
+  onClose,
+  dossier: propDossier,
+  onOpenCommunityTopic,
+}: DossierDetailModalProps) {
   const [copiedHash, setCopiedHash] = useState(false);
-  const [activeTab, setActiveTab] = useState<'narrative' | 'geo-telemetry' | 'audit-ledger'>('narrative');
+  const [activeTab, setActiveTab] = useState<'narrative' | 'geo-telemetry' | 'audit-ledger' | 'community'>('narrative');
 
   if (!isOpen) return null;
 
@@ -150,6 +158,18 @@ export function DossierDetailModal({ isOpen, onClose, dossier: propDossier }: Do
             }`}
           >
             Corroborated Ledger ({currentDossier.sourcesTriangulated} Sources)
+          </button>
+          <button
+            id="tab-dossier-community"
+            onClick={() => setActiveTab('community')}
+            className={`py-2.5 border-b-2 transition-colors cursor-pointer whitespace-nowrap flex items-center space-x-1.5 ${
+              activeTab === 'community'
+                ? 'border-[#0F172A] text-[#0F172A]'
+                : 'border-transparent text-[#64748b] hover:text-[#0F172A]'
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-[#1E3A8A]" />
+            <span>Community Deliberation (34 Notes · 1 Poll)</span>
           </button>
         </div>
 
@@ -442,6 +462,114 @@ export function DossierDetailModal({ isOpen, onClose, dossier: propDossier }: Do
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'community' && (
+            <div className="space-y-6">
+              <div className="bg-[#f8fafc] border border-[#cbd5e1] p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e2e8f0]">
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-[#1E3A8A] font-bold">
+                      LINKED CIVIC DELIBERATION &middot; CHATHAM HOUSE STANDARDS
+                    </div>
+                    <h3 className="font-newsreader text-[22px] font-semibold text-[#0F172A] leading-snug">
+                      Community Dialogue &amp; Sector Verification
+                    </h3>
+                  </div>
+
+                  {onOpenCommunityTopic && (
+                    <button
+                      onClick={() => {
+                        const topicMap: Record<string, string> = {
+                          'dossier-nelfund-01': 'topic-nelfund',
+                          'dossier-cbn-fx-02': 'topic-fx-liquidity',
+                          'dossier-grid-03': 'topic-grid-tariffs',
+                          'dossier-opec-03': 'topic-opec-energy',
+                        };
+                        const targetId = topicMap[currentDossier.id] || 'topic-nelfund';
+                        onClose();
+                        onOpenCommunityTopic(targetId);
+                      }}
+                      className="inline-flex items-center space-x-1.5 bg-[#0F172A] text-white hover:bg-[#1E3A8A] text-xs font-mono font-bold uppercase tracking-wider px-3.5 py-2 transition-colors shrink-0 cursor-pointer shadow-xs"
+                    >
+                      <span>JOIN FULL DELIBERATION DESK</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <p className="font-sourceserif text-[15px] text-[#45464d] leading-relaxed pt-3">
+                  This intelligence dossier is currently under active examination by accredited economists, institutional registrars, policy fellows, and subscribers. Readers are evaluating statutory compliance mechanisms, regional verification latency, and balance sheet implications.
+                </p>
+              </div>
+
+              {/* Sample Highlighted Community Analysis */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white border border-[#e2e8f0] p-4 text-left space-y-2">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-[#64748b]">
+                    <span className="font-bold text-[#0F172A]">Prof. Kayode Adeyemi</span>
+                    <span>28m ago</span>
+                  </div>
+                  <div className="text-[11px] font-mono text-[#1E3A8A] font-bold uppercase">
+                    REGISTRAR PERSPECTIVE:
+                  </div>
+                  <p className="font-sourceserif text-[14px] text-[#1a1c1b] leading-relaxed italic">
+                    &ldquo;The real friction point is institutional: registrars must reconcile prospective applicants against the JAMB CAPS admission ledger before names reach the live queue...&rdquo;
+                  </p>
+                  <div className="text-[10px] font-mono text-[#15803d]">
+                    &bull; 34 Fellow Endorsements (Sound Analysis)
+                  </div>
+                </div>
+
+                <div className="bg-white border border-[#e2e8f0] p-4 text-left space-y-2">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-[#64748b]">
+                    <span className="font-bold text-[#0F172A]">Babajide Cole</span>
+                    <span>52m ago</span>
+                  </div>
+                  <div className="text-[11px] font-mono text-[#1E3A8A] font-bold uppercase">
+                    CREDIT RISK VANTAGE:
+                  </div>
+                  <p className="font-sourceserif text-[14px] text-[#1a1c1b] leading-relaxed italic">
+                    &ldquo;Without a sovereign credit guarantee or endowment backstop, the fund risks capital depletion within 4 fiscal cycles if graduate underemployment persists at 38%...&rdquo;
+                  </p>
+                  <div className="text-[10px] font-mono text-[#15803d]">
+                    &bull; 41 Fellow Endorsements (Sound Analysis)
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Poll Teaser */}
+              <div className="bg-[#f9f9f7] border border-[#0F172A] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-1.5 text-[10px] font-mono font-bold uppercase text-[#0F172A]">
+                    <Vote className="w-3.5 h-3.5 text-[#1E3A8A]" />
+                    <span>ACTIVE INSTITUTIONAL GAUGE</span>
+                  </div>
+                  <div className="font-newsreader text-[16px] font-semibold text-[#0F172A]">
+                    51% of verified fellows anticipate regional upload latency will delay state polytechnics.
+                  </div>
+                </div>
+
+                {onOpenCommunityTopic && (
+                  <button
+                    onClick={() => {
+                      const topicMap: Record<string, string> = {
+                        'dossier-nelfund-01': 'topic-nelfund',
+                        'dossier-cbn-fx-02': 'topic-fx-liquidity',
+                        'dossier-grid-03': 'topic-grid-tariffs',
+                      };
+                      const targetId = topicMap[currentDossier.id] || 'topic-nelfund';
+                      onClose();
+                      onOpenCommunityTopic(targetId);
+                    }}
+                    className="text-xs font-mono font-bold uppercase text-[#1E3A8A] hover:underline flex items-center space-x-1 shrink-0 cursor-pointer"
+                  >
+                    <span>CAST VERIFICATION VOTE</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </div>
           )}

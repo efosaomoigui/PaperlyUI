@@ -128,4 +128,87 @@ export interface IntelligenceDossier {
     time: string;
   }[];
   communityNote?: string;
+  communityTopicId?: string;
+  communityContributionsCount?: number;
+}
+
+// ----------------- Paperly Community & Public Deliberation Types -----------------
+
+export interface CommunityAuthor {
+  id: string;
+  name: string;
+  handle: string;
+  role: string;
+  affiliation: string;
+  isVerified: boolean;
+  isEditor?: boolean;
+  badge?: string;
+  avatarInitials: string;
+}
+
+export interface CommunityCitation {
+  title: string;
+  source: string;
+  url?: string;
+}
+
+export interface CommunityComment {
+  id: string;
+  topicId: string;
+  parentId?: string | null;
+  author: CommunityAuthor;
+  timestamp: string;
+  content: string;
+  citation?: CommunityCitation;
+  perspectiveTag: 'Institutional Policy' | 'Market & Capital' | 'Field Evidence' | 'Legal & Regulatory' | 'Civic Impact';
+  endorsements: number;
+  userEndorsed: boolean;
+  isReported?: boolean;
+  replies?: CommunityComment[];
+}
+
+export interface CommunityPollOption {
+  id: string;
+  label: string;
+  votes: number;
+  percentage: number;
+}
+
+export interface CommunityPoll {
+  id: string;
+  topicId: string;
+  linkedDossierId: string;
+  title: string;
+  question: string;
+  context: string;
+  options: CommunityPollOption[];
+  totalVotes: number;
+  userVotedOptionId?: string | null;
+  closingDate: string;
+  methodologyNote: string;
+  status: 'OPEN' | 'CONCLUDED';
+}
+
+export interface CommunityTopic {
+  id: string;
+  title: string;
+  category: string;
+  linkedDossierId: string;
+  linkedDossierHeadline: string;
+  triangulatedSources: number;
+  confidenceScore: number;
+  dossierStatus: 'DEVELOPING' | 'UPDATED' | 'NEW';
+  summary: string;
+  deliberationPrompt: string;
+  participantsCount: number;
+  contributionsCount: number;
+  isFollowed: boolean;
+  pinnedEditorNote?: {
+    author: string;
+    role: string;
+    timestamp: string;
+    note: string;
+  };
+  lastActivity: string;
+  tags: string[];
 }

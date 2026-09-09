@@ -8,7 +8,6 @@ import { TopTickerBar } from './components/TopTickerBar';
 import { HeaderMasthead } from './components/HeaderMasthead';
 import { LeaderboardAd } from './components/LeaderboardAd';
 import { LiveTrackingBar } from './components/LiveTrackingBar';
-import { ExecutiveDossierHeader } from './components/ExecutiveDossierHeader';
 import { LeadStorySection } from './components/LeadStorySection';
 import { WhatMattersSection } from './components/WhatMattersSection';
 import { ImpactWatchSection } from './components/ImpactWatchSection';
@@ -23,6 +22,7 @@ import { MobileBottomBar } from './components/MobileBottomBar';
 
 // Full Screen Page Views
 import { CategoryView } from './components/views/CategoryView';
+import { CommunityPage } from './components/views/CommunityPage';
 import { ImpactWatchPage } from './components/views/ImpactWatchPage';
 import { PerspectivesPage } from './components/views/PerspectivesPage';
 import { DevelopingPage } from './components/views/DevelopingPage';
@@ -77,10 +77,20 @@ export default function App() {
   const [selectedBriefing, setSelectedBriefing] = useState<WhatMattersItem | null>(null);
   const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
   const [selectedPulseNode, setSelectedPulseNode] = useState<PulseNode | null>(null);
+  const [communityTopicId, setCommunityTopicId] = useState<string | null>(null);
 
   // Nav Switcher with window scroll reset
   const handleSelectNav = (nav: string) => {
     setActiveNav(nav);
+    if (nav !== 'community') {
+      setCommunityTopicId(null);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenCommunityTopic = (topicId: string) => {
+    setCommunityTopicId(topicId);
+    setActiveNav('community');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -135,12 +145,7 @@ export default function App() {
     if (activeNav === 'briefing') {
       return (
         <main className="flex-1">
-          {/* Executive Dossier Header */}
-          <ExecutiveDossierHeader
-            onOpenMethodology={() => handleSelectNav('how-it-works')}
-          />
-
-          {/* Lead The Paperly Briefing Carousel (3 Rotating Consequential Developments) */}
+          {/* Lead The Paperly Briefing Carousel with Clean Intro & Progressive Disclosure */}
           <LeadStorySection
             onOpenDossier={(dossier) => {
               setSelectedDossier(dossier);
@@ -148,6 +153,7 @@ export default function App() {
             }}
             onSelectSector={(sectorId) => setSelectedSectorId(sectorId)}
             onOpenTimelineEvent={handleOpenTimelineEvent}
+            onOpenMethodology={() => handleSelectNav('how-it-works')}
           />
 
           {/* What Matters Now (3 Macro & Infrastructural Inflection Points) */}
@@ -206,6 +212,21 @@ export default function App() {
       );
     }
 
+    if (activeNav === 'community') {
+      return (
+        <main className="flex-1">
+          <CommunityPage
+            onBackToBriefing={() => handleSelectNav('briefing')}
+            onOpenDossier={(dossier) => {
+              setSelectedDossier(dossier);
+              setIsDossierOpen(true);
+            }}
+            initialTopicId={communityTopicId}
+          />
+        </main>
+      );
+    }
+
     if (activeNav === 'impact-watch') {
       return (
         <main className="flex-1">
@@ -245,6 +266,7 @@ export default function App() {
               setSelectedDossier(dossier);
               setIsDossierOpen(true);
             }}
+            onOpenCommunityTopic={handleOpenCommunityTopic}
           />
         </main>
       );
@@ -373,7 +395,6 @@ export default function App() {
     // Default fallback
     return (
       <main className="flex-1">
-        <ExecutiveDossierHeader onOpenMethodology={() => handleSelectNav('how-it-works')} />
         <LeadStorySection
           onOpenDossier={(dossier) => {
             setSelectedDossier(dossier);
@@ -381,6 +402,7 @@ export default function App() {
           }}
           onSelectSector={(sectorId) => setSelectedSectorId(sectorId)}
           onOpenTimelineEvent={handleOpenTimelineEvent}
+          onOpenMethodology={() => handleSelectNav('how-it-works')}
         />
       </main>
     );
@@ -480,6 +502,7 @@ export default function App() {
         isOpen={isDossierOpen}
         dossier={selectedDossier}
         onClose={() => setIsDossierOpen(false)}
+        onOpenCommunityTopic={handleOpenCommunityTopic}
       />
 
       <BriefingDetailModal

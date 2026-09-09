@@ -22,6 +22,7 @@ export function HeaderMasthead({
 
   const navItems = [
     { label: 'BRIEFING', id: 'briefing' },
+    { label: 'COMMUNITY', id: 'community' },
     { label: 'NIGERIA', id: 'nigeria' },
     { label: 'WORLD', id: 'world' },
     { label: 'BUSINESS', id: 'business' },

@@ -29,16 +29,16 @@ export function TopTickerBar({
   };
 
   return (
-    <header className="border-b border-[#e2e8f0] bg-white text-[11px] font-medium tracking-tight text-[#1a1c1b]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex flex-wrap items-center justify-between gap-y-1">
+    <header className="border-b border-[#e2e8f0] bg-white text-[10px] text-[#1a1c1b]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-1 flex flex-wrap items-center justify-between gap-y-1">
         
         {/* Editions toggle and Newsprint Texture switch */}
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            <span className="font-semibold text-[#45464d] tracking-wider text-[10px] uppercase font-inter">
-              Editions:
+        <div className="flex items-center space-x-2.5 sm:space-x-3">
+          <div className="flex items-center space-x-1.5">
+            <span className="font-mono text-[#94a3b8] tracking-widest text-[9px] uppercase">
+              EDITIONS:
             </span>
-            <div className="flex items-center space-x-1.5 font-inter text-[11px]">
+            <div className="flex items-center space-x-1.5 font-inter text-[10px]">
               {editions.map((edition, idx) => (
                 <span key={edition} className="flex items-center">
                   <button
@@ -46,7 +46,7 @@ export function TopTickerBar({
                     onClick={() => onSelectEdition(edition)}
                     className={`cursor-pointer transition-colors duration-100 ${
                       active === edition
-                        ? 'font-bold text-[#0F172A] underline underline-offset-2'
+                        ? 'font-bold text-[#0F172A]'
                         : 'text-[#64748b] hover:text-[#0F172A]'
                     }`}
                   >
@@ -63,27 +63,27 @@ export function TopTickerBar({
           {/* Real Newsprint Grain Texture Experimentation Toggle */}
           {onToggleNewsprintGrain && (
             <div className="hidden sm:flex items-center pl-2.5 border-l border-[#e2e8f0] space-x-1.5">
-              <span className="text-[10px] font-mono uppercase text-[#64748b]">
-                NEWSPRINT FEEL:
+              <span className="text-[9px] font-mono tracking-widest uppercase text-[#94a3b8]">
+                NEWSPRINT:
               </span>
               <button
                 id="btn-toggle-newsprint-grain"
                 onClick={onToggleNewsprintGrain}
-                className={`text-[10px] font-mono px-1.5 py-0.5 border cursor-pointer transition-colors ${
+                className={`text-[9px] font-mono px-1 py-0.2 border cursor-pointer transition-colors ${
                   isNewsprintGrain
                     ? 'bg-[#0F172A] text-white border-[#0F172A] font-bold'
                     : 'bg-white text-[#64748b] border-[#cbd5e1] hover:text-[#0F172A]'
                 }`}
-                title="Toggle authentic broadsheet paper grain and fibrous texture"
+                title="Toggle broadsheet paper grain overlay"
               >
-                {isNewsprintGrain ? 'ON (GRAIN)' : 'OFF'}
+                {isNewsprintGrain ? 'ON' : 'OFF'}
               </button>
             </div>
           )}
         </div>
 
         {/* Financial & Sovereign Telemetry Tickers */}
-        <div className="flex items-center flex-wrap gap-x-4 sm:gap-x-6 text-[11px] font-inter">
+        <div className="flex items-center flex-wrap gap-x-3 sm:gap-x-5 text-[10.5px] font-inter">
           {TOP_TICKERS.map((ticker) => {
             const isPos = ticker.type === 'positive';
             const isNeg = ticker.type === 'negative';
@@ -92,17 +92,17 @@ export function TopTickerBar({
                 key={ticker.symbol}
                 id={`btn-ticker-${ticker.symbol.toLowerCase().replace(/\s+/g, '-')}`}
                 onClick={onOpenPulse}
-                className="flex items-center space-x-1.5 hover:opacity-75 transition-opacity"
+                className="flex items-center space-x-1 hover:opacity-75 transition-opacity"
                 title="View in Paperly Pulse Telemetry"
               >
-                <span className="font-semibold tracking-wide text-[#45464d] text-[10px]">
+                <span className="font-mono text-[#64748b] text-[9.5px]">
                   {ticker.symbol}
                 </span>
-                <span className="font-bold text-[#0F172A] font-inter">
+                <span className="font-bold text-[#0F172A] font-inter text-[10.5px]">
                   {ticker.value}
                 </span>
                 <span
-                  className={`flex items-center text-[10px] font-semibold ${
+                  className={`flex items-center text-[9px] font-mono font-semibold ${
                     isPos
                       ? 'text-[#15803d]'
                       : isNeg
@@ -120,18 +120,18 @@ export function TopTickerBar({
           })}
 
           {/* Sync Time & Protocol Indicator */}
-          <div className="flex items-center space-x-1.5 pl-2 border-l border-[#e2e8f0] text-[#64748b]">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#15803d] animate-pulse" />
-            <span className="text-[10px] font-medium tracking-wider uppercase font-inter">
-              SYNC: 14:02 UTC
+          <div className="flex items-center space-x-1 pl-2 border-l border-[#e2e8f0] text-[#94a3b8]">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#15803d]" />
+            <span className="text-[9px] font-mono tracking-widest uppercase">
+              SYNC 14:02 UTC
             </span>
             <button
               id="btn-sync-refresh"
               onClick={handleRefresh}
-              className="p-0.5 text-[#64748b] hover:text-[#0F172A] transition-colors"
+              className="p-0.5 text-[#94a3b8] hover:text-[#0F172A] transition-colors"
               title="Re-synchronize algorithmic telemetry"
             >
-              <RefreshCw className={`w-2.5 h-2.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-2 h-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
         </div>

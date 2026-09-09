@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Sparkles, Clock, ShieldCheck, ArrowRight, Eye, RefreshCw, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Sparkles, Clock, ShieldCheck, ArrowRight, Eye, RefreshCw, AlertCircle, MessageSquare } from 'lucide-react';
 import { IntelligenceDossier } from '../../types';
 import { BRIEFING_CAROUSEL_DOSSIERS } from '../../data/mockData';
 import { AdPlacement } from '../AdPlacement';
@@ -7,6 +7,7 @@ import { AdPlacement } from '../AdPlacement';
 interface DevelopingPageProps {
   onBackToBriefing: () => void;
   onOpenDossier: (dossier: IntelligenceDossier) => void;
+  onOpenCommunityTopic?: (topicId: string) => void;
 }
 
 interface DevelopingSituation {
@@ -86,6 +87,7 @@ const DEVELOPING_SITUATIONS: DevelopingSituation[] = [
 export function DevelopingPage({
   onBackToBriefing,
   onOpenDossier,
+  onOpenCommunityTopic,
 }: DevelopingPageProps) {
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'NEW' | 'DEVELOPING' | 'UPDATED' | 'STABLE'>('ALL');
 
@@ -234,7 +236,7 @@ export function DevelopingPage({
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                   <button
                     onClick={() => onOpenDossier(matchedDossier)}
                     className="text-xs font-bold font-inter tracking-wider uppercase text-[#1E3A8A] hover:text-[#0F172A] flex items-center space-x-1.5 cursor-pointer group"
@@ -242,7 +244,25 @@ export function DevelopingPage({
                     <span>OPEN COMPLETE INVESTIGATION DOSSIER</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </button>
-                  <span className="text-[10px] font-mono text-[#94a3b8]">EVIDENCE LOCKED</span>
+
+                  {onOpenCommunityTopic && (
+                    <button
+                      onClick={() => {
+                        const topicMap: Record<string, string> = {
+                          'dossier-nelfund-01': 'topic-nelfund',
+                          'dossier-cbn-fx-02': 'topic-fx-liquidity',
+                          'dossier-grid-03': 'topic-grid-tariffs',
+                        };
+                        const targetTopicId = topicMap[sit.dossierId] || 'topic-nelfund';
+                        onOpenCommunityTopic(targetTopicId);
+                      }}
+                      className="inline-flex items-center space-x-1.5 bg-[#f8fafc] hover:bg-[#0F172A] text-[#0F172A] hover:text-white border border-[#cbd5e1] hover:border-[#0F172A] px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      title="Join reader deliberation and vote in policy polls"
+                    >
+                      <MessageSquare className="w-3 h-3" />
+                      <span>COMMUNITY DELIBERATION</span>
+                    </button>
+                  )}
                 </div>
               </article>
             );
